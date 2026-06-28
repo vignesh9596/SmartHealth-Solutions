@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Wellness Plan: {{ profile.name }}</h3>
+
+<p>
+<strong>Age:</strong> {{ profile.age }}
+• <strong>BMI:</strong> {{ plan.bmi }}
+• <strong>Estimated Calories:</strong> {{ plan.estimated_calories }}
+</p>
+
+<h4>Diet Recommendations</h4>
+<ul>
+{% for r in plan.diet_recommendations %}
+<li>{{ r }}</li>
+{% endfor %}
+</ul>
+
+<h5>Sample 1-day Meal Plan</h5>
+
+<div class="card mb-3">
+<div class="card-body">
+{% for k, v in plan.sample_meal_plan.items() %}
+<p><strong>{{ k }}:</strong> {{ v }}</p>
+{% endfor %}
+</div>
+</div>
+
+<h4>Exercise Recommendations</h4>
+
+<ul>
+{% for r in plan.exercise_recommendations %}
+<li>{{ r }}</li>
+{% endfor %}
+</ul>
+
+<h5>7-day Exercise Schedule</h5>
+
+<div class="row">
+
+{% for day in plan.exercise_schedule %}
+
+<div class="col-md-4 mb-3">
+
+<div class="card">
+
+<div class="card-header">
+<strong>{{ day.day }}</strong>
+</div>
+
+<div class="card-body">
+
+{% for a in day.activities %}
+
+<p>
+<strong>{{ a.type }}:</strong> {{ a.activity }} —
+{{ a.duration }} min
+{% if a.time %} (at {{ a.time }}){% endif %}
+</p>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<a class="btn btn-secondary" href="{{ url_for('index') }}">
+Back to Home
+</a>
+
+<!-- ✅ NEW SMART REMINDER POPUP -->
+{% if next_activity_msg %}
+
+<div id="reminderBox" style="
+display:none;
+position:fixed;
+top:20px;
+right:20px;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.3);
+z-index:1000;
+width:300px;
+">
+
+<h5>🔔 Reminder</h5>
+
+<p id="reminderText"></p>
+
+<div style="display:flex; justify-content:space-between;">
+<button class="btn btn-success btn-sm" onclick="closeReminder()">Do Now</button>
+<button class="btn btn-warning btn-sm" onclick="snoozeReminder()">Remind Me Later</button>
+</div>
+
+</div>
+
+<script>
+
+let reminderMsg = `{{ next_activity_msg | safe }}`;
+
+function showReminder() {
+    document.getElementById("reminderText").innerText = reminderMsg;
+    document.getElementById("reminderBox").style.display = "block";
+}
+
+function closeReminder() {
+    document.getElementById("reminderBox").style.display = "none";
+}
+
+function snoozeReminder() {
+    closeReminder();
+
+    // ⏰ snooze for 5 minutes
+    setTimeout(showReminder, 5 * 60 * 1000);
+}
+
+window.onload = function () {
+    if (reminderMsg) {
+        showReminder();
+    }
+};
+
+</script>
+
+{% endif %}
+
+{% endblock %}

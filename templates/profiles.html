@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>All Profiles</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th><th>Age</th><th>Diseases</th><th>BMI</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in profiles %}
+      <tr>
+        <td>{{ p.name }}</td>
+        <td>{{ p.age }}</td>
+        <td>{{ p.diseases or '—' }}</td>
+        <td>{{ p.bmi() or '—' }}</td>
+        <td>
+          <a class="btn btn-primary btn-sm" href="{{ url_for('view_plan', profile_id=p.id) }}">Plan</a>
+          <form method="POST" action="{{ url_for('delete_profile', profile_id=p.id) }}" style="display:inline"
+                onsubmit="return confirm('Delete profile?');">
+            <button class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5">No profiles yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

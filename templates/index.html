@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+
+  <!-- Left section -->
+  <div class="col-md-8">
+
+    <h2>Welcome to Wellness Planner</h2>
+
+    <p>
+      Create a user profile to generate a personalized diet and exercise
+      plan for chronic conditions like diabetes and hypertension.
+    </p>
+
+    <a class="btn btn-primary" href="{{ url_for('new_profile') }}">
+      Create Profile
+    </a>
+
+  </div>
+
+  <!-- Right section -->
+  <div class="col-md-4">
+
+    <h5>Recent Profiles</h5>
+
+    <ul class="list-group">
+
+      {% if profiles %}
+
+        {% for p in profiles %}
+
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+
+          <div>
+            <strong>{{ p.name }}</strong><br>
+            <small>{{ p.diseases if p.diseases else "No conditions" }}</small>
+          </div>
+
+          <a class="btn btn-sm btn-outline-primary"
+             href="{{ url_for('view_plan', profile_id=p.id) }}">
+             View Plan
+          </a>
+
+        </li>
+
+        {% endfor %}
+
+      {% else %}
+
+        <li class="list-group-item text-center">
+          No profiles yet.
+        </li>
+
+      {% endif %}
+
+    </ul>
+
+  </div>
+
+</div>
+
+{% endblock %}
